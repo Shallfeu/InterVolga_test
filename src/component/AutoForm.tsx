@@ -92,8 +92,8 @@ const AutoForm = () => {
     };
 
     const onResetForm = () => {
-        setFormData(initialValues);
         localStorage.setItem(FORM_DATA, '');
+        setFormData(initialValues);
     };
 
     return (
