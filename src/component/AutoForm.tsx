@@ -92,9 +92,9 @@ const AutoForm = () => {
     };
 
     const onResetForm = (resetForm: any) => {
+        resetForm(initialValues);
         localStorage.setItem(FORM_DATA, '');
         setFormData(initialValues);
-        resetForm(initialValues);
     };
 
     return (
@@ -118,6 +118,8 @@ const AutoForm = () => {
                                         <FormLabel htmlFor="auto_number">Гос-номер</FormLabel>
 
                                         <Input
+                                            as={InputMask}
+                                            mask="a999aa999"
                                             borderColor="blackAlpha.700"
                                             variant="outline"
                                             rounded="none"
@@ -260,7 +262,7 @@ const AutoForm = () => {
 
                                         <Input
                                             as={InputMask}
-                                            mask="**.**.****"
+                                            mask="99.99.9999"
                                             borderColor="blackAlpha.700"
                                             variant="outline"
                                             rounded="none"
