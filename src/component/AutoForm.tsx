@@ -91,9 +91,10 @@ const AutoForm = () => {
         return onChange;
     };
 
-    const onResetForm = () => {
+    const onResetForm = (resetForm: any) => {
         localStorage.setItem(FORM_DATA, '');
         setFormData(initialValues);
+        resetForm(initialValues);
     };
 
     return (
@@ -103,7 +104,7 @@ const AutoForm = () => {
             onSubmit={onHandleSubmit}
             validationSchema={validationSchema}
         >
-            {({ errors, touched, setFieldValue }) => (
+            {({ errors, touched, setFieldValue, resetForm }) => (
                 <Form>
                     <Box bg="white" p={6} border="2px" borderColor="blackAlpha.700">
                         <Heading fontSize="3xl" mb="30px">
@@ -291,7 +292,7 @@ const AutoForm = () => {
                                     background="white"
                                     border="2px"
                                     borderColor="blackAlpha.700"
-                                    onClick={onResetForm}
+                                    onClick={() => onResetForm(resetForm as any)}
                                 >
                                     Отменить
                                 </Button>
