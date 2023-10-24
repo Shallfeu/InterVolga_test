@@ -10,7 +10,7 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import InputMask from 'react-input-mask';
-import { Field, FieldProps, Formik, Form } from 'formik';
+import { Field, FieldProps, Formik, Form, FormikErrors } from 'formik';
 import * as Yup from 'yup';
 import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -57,9 +57,9 @@ const AutoForm = () => {
     const validationSchema = Yup.object().shape({
         auto_number: Yup.string()
             .required('Обязательно к заполнению')
-            .matches(/^[0-9]+$/, 'Должно быть число'),
+            .matches(/^([A-Z]{1})([0-9]{3})([A-Z]{2})([0-9]{3})$/, 'Должен соответсновать виду a111aa111'),
         auto_type: Yup.string().required('Обязательно к заполнению'),
-        date: Yup.string().required('Обязательно к заполнению'),
+        date: Yup.date().required('Обязательно к заполнению'),
         fullname: Yup.string().required('Обязательно к заполнению'),
         pass_series: Yup.string()
             .required('Обязательно к заполнению')
@@ -91,10 +91,14 @@ const AutoForm = () => {
         return onChange;
     };
 
-    const onResetForm = (resetForm: any) => {
-        resetForm(initialValues);
+    const onResetForm = (
+        resetFormFunc: (
+            values: React.SetStateAction<FormData>,
+            shouldValidate?: boolean | undefined,
+        ) => Promise<void | FormikErrors<FormData>>,
+    ) => {
+        resetFormFunc(initialValues);
         localStorage.setItem(FORM_DATA, '');
-        setFormData(initialValues);
     };
 
     return (
@@ -104,7 +108,7 @@ const AutoForm = () => {
             onSubmit={onHandleSubmit}
             validationSchema={validationSchema}
         >
-            {({ errors, touched, setFieldValue, resetForm }) => (
+            {({ errors, touched, setFieldValue, setValues }) => (
                 <Form>
                     <Box bg="white" p={6} border="2px" borderColor="blackAlpha.700">
                         <Heading fontSize="3xl" mb="30px">
@@ -120,6 +124,7 @@ const AutoForm = () => {
                                         <Input
                                             as={InputMask}
                                             mask="a999aa999"
+                                            maskChar={null}
                                             borderColor="blackAlpha.700"
                                             variant="outline"
                                             rounded="none"
@@ -263,6 +268,7 @@ const AutoForm = () => {
                                         <Input
                                             as={InputMask}
                                             mask="99.99.9999"
+                                            maskChar={null}
                                             borderColor="blackAlpha.700"
                                             variant="outline"
                                             rounded="none"
@@ -275,8 +281,6 @@ const AutoForm = () => {
                                     </FormControl>
                                 )}
                             </Field>
-
-                            {Object.values(errors).length}
 
                             <HStack>
                                 <Button
@@ -294,7 +298,7 @@ const AutoForm = () => {
                                     background="white"
                                     border="2px"
                                     borderColor="blackAlpha.700"
-                                    onClick={() => onResetForm(resetForm as any)}
+                                    onClick={() => onResetForm(setValues)}
                                 >
                                     Отменить
                                 </Button>
